@@ -11,17 +11,17 @@ PlaceObj('ModItemCommanderProfile', {
 	'anomaly_bonus_breakthrough', range(2, 94),
 	'bonus_rockets', 4,
 	'game_apply', function (self, city)
-GrantTech("AutonomousHubs")
-GrantTech("ExtractorAI")
-GrantTech("SuperconductingComputing")
-GrantTech("SuperiorCables")
-GrantTech("SuperiorPipes")
-GrantTech("AutonomousSensors")
-GrantTech("DeepScanning")
-CreateLabelModifier("HuskyCommander", "FusionReactor", "electricity_production", 0, 50)
-	CreateLabelModifier("HuskyCommander", "AtomicBattery", "max_electricity_charge", 0, 100)
-	GrantTech("AtomicAccumulator")
-end,
+		GrantTech("AutonomousHubs")
+		GrantTech("ExtractorAI")
+		GrantTech("SuperconductingComputing")
+		GrantTech("SuperiorCables")
+		GrantTech("SuperiorPipes")
+		GrantTech("AutonomousSensors")
+		GrantTech("DeepScanning")
+		CreateLabelModifier("HuskyCommander", "FusionReactor", "electricity_production", 0, 50)
+		CreateLabelModifier("HuskyCommander", "AtomicBattery", "max_electricity_charge", 0, 100)
+		GrantTech("AtomicAccumulator")
+	end,
 }),
 PlaceObj('ModItemDecalEntity', {
 	'name', "HuskyLogoDecal",
@@ -59,20 +59,20 @@ PlaceObj('ModItemMissionSponsor', {
 	'flavor', T{822144428938, --[[ModItemMissionSponsor Husky flavor]] "Game doesn't allow me to forbid buying rockets, so instead I've made them really expensive to discourage such behaviour."},
 	'default_skin', "Star",
 	'game_apply', function (self, city)
-CreateLabelModifier("HuskySponsor", "Consts", "SponsorResearch", 0, -100)
-CreateGameTimeThread(function()
-	Sleep(1) --Wait until applicants generation has completed
-	g_ApplicantPoolFilter.HuskyTrait = nil
-	-- Messing with the UI can't happen right away
-    -- TODO: Find a trigger event instead of this delay?
-	Sleep(1000)
-	CreateRealTimeThread(WaitCustomPopupNotification,
-		"About Husky",
-		"This mod enables you to play with all things husky. Try to survive by using some unorthodox methods and never-seen-before play style. <newline><newline><em>HINT:</em> Spend initial sponsor money to invest in outsourcing research.",
-		{ "Woof woof" }
-	)
-end)
-end,
+		CreateLabelModifier("HuskySponsor", "Consts", "SponsorResearch", 0, -100)
+		CreateGameTimeThread(function()
+			Sleep(1) --Wait until applicants generation has completed
+			g_ApplicantPoolFilter.HuskyTrait = nil
+			-- Messing with the UI can't happen right away
+    		-- TODO: Find a trigger event instead of this delay?
+			Sleep(1000)
+			CreateRealTimeThread(WaitCustomPopupNotification,
+				"About Husky",
+				"This mod enables you to play with all things husky. Try to survive by using some unorthodox methods and never-seen-before play style. <newline><newline><em>HINT:</em> Spend initial sponsor money to invest in outsourcing research.",
+				{ "Woof woof" }
+			)
+		end)
+	end,
 	'goal', "MG_Anomalies",
 	'sponsor_nation_name1', "Russian",
 	'sponsor_nation_percent1', 60,
