@@ -11,16 +11,15 @@ return {
         'anomaly_bonus_breakthrough', range(2, 94), 
         'bonus_rockets', 1, 
         'game_apply', function (self, city)
-            GrantTech("AutonomousHubs")
-            GrantTech("ExtractorAI")
-            GrantTech("SuperconductingComputing")
-            GrantTech("SuperiorCables")
-            GrantTech("SuperiorPipes")
-            GrantTech("AutonomousSensors")
-            GrantTech("DeepScanning")
+            GrantTech("AutonomousHubs") -- woof woof
+            -- AddCustomOnScreenNotification("Research","Breakthrough", "Researched " .. tech)
+            GrantTech("SuperconductingComputing") -- woof woof 
+            GrantTech("AutonomousSensors") -- sniff sniff
+            GrantTech("DeepScanning") -- dig
+            GrantTech("AtomicAccumulator") -- endless energy
             CreateLabelModifier("HuskyCommander", "FusionReactor", "electricity_production", 0, 50)
             CreateLabelModifier("HuskyCommander", "AtomicBattery", "max_electricity_charge", 0, 100)
-            GrantTech("AtomicAccumulator")
+            CreateLabelModifier("HuskyCommander", "WasteRockDumpSite", "max_amount_WasteRock", 0, 100)
         end, 
     }), 
     PlaceObj('ModItemDecalEntity', {
@@ -104,6 +103,7 @@ return {
                 {"Woof woof"})--]]
             end)
         end, 
+        'goal', "MG_Anomalies", 
         'sponsor_nation_name1', "Russian", 
         'sponsor_nation_percent1', 60, 
         'sponsor_nation_name2', "American", 
