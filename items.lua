@@ -7,20 +7,19 @@ PlaceObj('ModItemCommanderProfile', {
 	'name', "Husky",
 	'display_name', T{315637784763, --[[ModItemCommanderProfile Husky display_name]] "Husky"},
 	'challenge_mod', 10,
-	'effect', T{439641132159, --[[ModItemCommanderProfile Husky effect]] "- Husky wag tail (<color 250 236 208>Breakthrough Anomalies</color> are more common)<newline>- Husky paw paw (start with extra <color 250 236 208>Rockets</color>)<newline>- Husky woof woof (bonus Tech: <color 250 236 208>Autonomous Hubs</color> (Drone Hubs no longer require Power or maintenance))"},
+	'effect', T{439641132159, --[[ModItemCommanderProfile Husky effect]] "- Husky wag tail (<color 250 236 208>Breakthrough Anomalies</color> are more common)<newline>- Husky paw paw (start with extra <color 250 236 208>Rocket</color>)<newline>- Husky woof woof (bonus Tech: <color 250 236 208>Autonomous Hubs</color> (Drone Hubs no longer require Power or maintenance))"},
 	'anomaly_bonus_breakthrough', range(2, 94),
-	'bonus_rockets', 4,
+	'bonus_rockets', 1,
 	'game_apply', function (self, city)
-GrantTech("AutonomousHubs")
-GrantTech("ExtractorAI")
-GrantTech("SuperconductingComputing")
-GrantTech("SuperiorCables")
-GrantTech("SuperiorPipes")
-GrantTech("AutonomousSensors")
-GrantTech("DeepScanning")
-CreateLabelModifier("HuskyCommander", "FusionReactor", "electricity_production", 0, 50)
-	CreateLabelModifier("HuskyCommander", "AtomicBattery", "max_electricity_charge", 0, 100)
-	GrantTech("AtomicAccumulator")
+            GrantTech("AutonomousHubs") -- woof woof
+            -- AddCustomOnScreenNotification("Research","Breakthrough", "Researched " .. tech)
+            GrantTech("SuperconductingComputing") -- woof woof 
+            GrantTech("AutonomousSensors") -- sniff sniff
+            GrantTech("DeepScanning") -- dig
+            GrantTech("AtomicAccumulator") -- endless energy
+            CreateLabelModifier("HuskyCommander", "FusionReactor", "electricity_production", 0, 50)
+            CreateLabelModifier("HuskyCommander", "AtomicBattery", "max_electricity_charge", 0, 100)
+            CreateLabelModifier("HuskyCommander", "WasteRockDumpSite", "max_amount_WasteRock", 0, 100)
 end,
 }),
 PlaceObj('ModItemDecalEntity', {
@@ -55,23 +54,54 @@ PlaceObj('ModItemMissionSponsor', {
 	'initial_techs_unlocked', 2,
 	'trait', "HuskyTrait",
 	'anomaly_bonus_breakthrough', range(4, 96),
-	'effect', T{411167707559, --[[ModItemMissionSponsor Husky effect]] "Difficulty: <em>Normal</em><newline><newline>Funding: $<funding> M<newline>Research per Sol: <research(100)><newline>Rare Metals price: $<ExportPricePreciousMetals> M<newline>Starting Applicants: <ApplicantsPoolStartingSize><newline><newline>- 5 extra starting technologies, but no sponsored research <em>(drawback)</em><newline>- Discover more Breakthrough Anomalies<newline>- Gain Funding every time a tech is researched. Gain double if it's a Breakthrough tech<newline>- Researching a Breakthrough Tech grants Applicants and you can buy additional Applicants with funding<newline>- Can only have <em>Husky</em> Colonists <em>(drawback)</em><newline>- Extra Starting Rockets with Large payload (<cargo> kg), but Additional Rockets cannot be bought <em>(drawback)</em>"},
+	'effect', T{411167707559, --[[ModItemMissionSponsor Husky effect]] "Difficulty: <em>Normal</em><newline><newline>Funding: $<funding> M<newline>Research per Sol: <research(SponsorResearch)><newline>Rare Metals price: $<ExportPricePreciousMetals> M<newline>Starting Applicants: <ApplicantsPoolStartingSize><newline><newline>- 5 extra starting technologies, but no sponsored research <em>(drawback)</em><newline>- Discover more Breakthrough Anomalies<newline>- Gain Funding every time a tech is researched. Gain double if it's a Breakthrough tech<newline>- Researching a Breakthrough Tech grants Applicants and you can buy additional Applicants with funding<newline>- Can only have <em>Husky</em> Colonists <em>(drawback)</em><newline>- Extra Starting Rockets with Large payload (<cargo> kg), but Additional Rockets cannot be bought <em>(drawback)</em>"},
 	'flavor', T{822144428938, --[[ModItemMissionSponsor Husky flavor]] "Game doesn't allow me to forbid buying rockets, so instead I've made them really expensive to discourage such behaviour."},
 	'default_skin', "Star",
 	'game_apply', function (self, city)
-CreateLabelModifier("HuskySponsor", "Consts", "SponsorResearch", 0, -100)
-CreateGameTimeThread(function()
-	Sleep(1) --Wait until applicants generation has completed
-	g_ApplicantPoolFilter.HuskyTrait = nil
-	-- Messing with the UI can't happen right away
-    -- TODO: Find a trigger event instead of this delay?
-	Sleep(1000)
-	CreateRealTimeThread(WaitCustomPopupNotification,
-		"About Husky",
-		"This mod enables you to play with all things husky. Try to survive by using some unorthodox methods and never-seen-before play style. <newline><newline><em>HINT:</em> Spend initial sponsor money to invest in outsourcing research.",
-		{ "Woof woof" }
-	)
-end)
+            --CreateLabelModifier("HuskySponsor", "Consts", "SponsorResearch", 0, -100)
+            GrantTech("SuperiorCables") -- protection from husky
+            GrantTech("SuperiorPipes") -- protection from husky
+            GrantTech("ExtractorAI") -- dig
+
+            CreateGameTimeThread(function()
+                Sleep(1) --Wait until applicants generation has completed
+                g_ApplicantPoolFilter.HuskyTrait = nil
+                -- Messing with the UI can't happen right away
+                -- TODO: Find a trigger event instead of this delay?
+                Sleep(1000)
+                --local tech = TechDef[tech_id]
+                params = {
+                    --title = T{"About <display_name>", self.display_name}, 
+                    title = T{"About Husky"}, 
+                    text = T{"This mod enables you to play with all things husky. Try to survive by using some unorthodox methods and never-seen-before play style. <newline><newline><em>HINT:</em> Spend initial sponsor money to invest in outsourcing research."}, 
+                    -- text = T{tech.description, tech}, 
+                    --               text = T{"<description>", description = tech.description},
+                    choice1 = "Open Research Screen", 
+                    choice1_hint1 = "This will take you to the Research Screen", 
+                    choice1_rollover = "Show Research Screen", 
+                    choice1_rollover_title = "Research Screen", 
+                    --choice1_img = "UI/Icons/Sections/research_1.tga",
+
+                    choice2 = T{"Woof woof"}, 
+                    choice2_hint1 = "This will close the current popup dialogue", 
+                    choice2_rollover_title = "Woof woof", 
+                    choice2_rollover = "Close Dialogue", 
+                    --choice2_img = "UI/Icons/message_ok.tga",
+
+                    image = "UI/Messages/alleys.tga", 
+                }
+                local choice = WaitPopupNotification(false, params)
+                sleep(1000)
+                if choice == 1 then
+                    OpenResearchDialog()
+                end
+
+
+                --[[CreateRealTimeThread(WaitCustomPopupNotification, 
+                    "About Husky", 
+                    "This mod enables you to play with all things husky. Try to survive by using some unorthodox methods and never-seen-before play style. <newline><newline><em>HINT:</em> Spend initial sponsor money to invest in outsourcing research.", 
+                {"Woof woof"})--]]
+            end)
 end,
 	'goal', "MG_Anomalies",
 	'sponsor_nation_name1', "Russian",
@@ -89,7 +119,7 @@ end,
 	'RCRover', 1,
 	'ExplorerRover', 1,
 	'RCTransport', 1,
-	'Drone', 10,
+	'Drone', 75,
 	'Polymers', 15,
 	'MachineParts', 15,
 	'Electronics', 15,
@@ -98,7 +128,13 @@ end,
 	'FuelFactory', 1,
 	'StirlingGenerator', 5,
 	'OrbitalProbe', 10,
-}),
+}, {
+	PlaceObj('TechEffect_ModifyLabel', {
+		'Label', "Consts",
+		'Prop', "SponsorResearch",
+		'Percent', -100,
+	}),
+	}),
 PlaceObj('ModItemRadioStation', {
 	'name', "HuskyMusic",
 	'display_name', T{472768075585, --[[ModItemRadioStation HuskyMusic display_name]] "Woof Woof"},
@@ -111,7 +147,7 @@ PlaceObj('ModItemTrait', {
 	'category', "other",
 	'description', T{836563932929, --[[ModItemTrait HuskyTrait description]] "Raises the Morale of all Adult people in the Dome. Benefits stack with each additional Husky."},
 	'param', 10,
-	'apply_func', function() end,
+	'apply_func', function (colonist, trait, init)  end,
 	'modify_target', "dome colonists",
 	'modify_trait', "Adult",
 	'modify_property', "base_morale",

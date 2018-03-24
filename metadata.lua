@@ -3,11 +3,11 @@ return PlaceObj('ModDef', {
 	'description', "Adds a mission logo that resembles husky.",
 	'tags', "husky",
 	'id', "g2DynF",
-	'author', "CODEX",
-	'version', 80,
-	'lua_revision', 227923,
+	'author', "Alvareto",
+	'version', 116,
+	'lua_revision', 228184,
 	'code', {
 		"Code/HuskyTraitScript.lua",
 	},
-	'saved', 1521565196,
+	'saved', 1521895657,
 })
