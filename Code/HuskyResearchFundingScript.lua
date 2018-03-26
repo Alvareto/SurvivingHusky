@@ -1,5 +1,6 @@
 local function GetModLocation()
     -- /Code/HuskyResearchFundingScript.lua = 26
+    --ModLog(tostring(GameTime()) .. " >PATH= " .. tostring(ModElement:GetModRootPath()))
     return debug.getinfo(1, "S").source:sub(2, -36)
 end
 

@@ -6,8 +6,24 @@ function AddCurrentTime()
     end
 
     local left_buttons = dlg['idLeftButtons']
+    local win = XWindow:new({}, left_buttons)
 
     XText:new({
+        Id = "idCurrentTime", 
+        MinWidth = 146, 
+        RolloverTemplate = "Rollover", 
+        HAlign = "right", 
+        VAlign = "bottom", 
+        TextFont = "BuildMenuBuilding", 
+        TextColor = RGBA(255, 254, 171, 255), 
+        RolloverTextColor = RGBA(255, 254, 171, 255), 
+        Margins = box(150, 0, 0, 0), 
+        TextHAlign = "center", 
+        TextVAlign = "center"
+    }, win)
+    self.idCurrentTime:SetVisible(true)
+
+    --[[ XText:new({
         Id = "idCurrentTime", 
         MinWidth = 146, 
         RolloverTemplate = "Rollover", 
@@ -16,12 +32,13 @@ function AddCurrentTime()
         font_id = 8, --TextFont = "BuildMenuBuilding", 
         TextColor = RGBA(255, 254, 171, 255), 
         RolloverTextColor = RGBA(255, 254, 171, 255), 
-        Margins = box(0, 0, 0, -25), -- minx, miny, maxx, maxy TESTING TESTING TESTING- finally got it right
+        --// top left corner and dimensions
+        Margins = box(41, 0, 0, 0), -- minx, miny, maxx, maxy TESTING TESTING TESTING- finally got it right
         -- GetXDialog("HUD")['idCurrentTime'].Margins = box(0, 0, 0, -25)
         TextHAlign = "center", 
         TextVAlign = "center"
     }, left_buttons)
-    self.idCurrentTime:SetVisible(true)
+    self.idCurrentTime:SetVisible(true)--]]
 
     local current_time = dlg['idCurrentTime']
     
@@ -31,7 +48,7 @@ function AddCurrentTime()
     })
     current_time:SetRolloverText(T{
         T{
-            "Current time is <em><time></em><newline>", 
+            "Current time is <em><time></em>", 
             time = function()
                 return os.date("%H:%M")
             end
