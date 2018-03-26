@@ -43,3 +43,6 @@ luac.out
 Husky.png
 Husky.psd
 Rainbow.png
+
+# Music files
+*.opus
