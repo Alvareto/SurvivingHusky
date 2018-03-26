@@ -4,10 +4,11 @@ return PlaceObj('ModDef', {
 	'tags', "husky",
 	'id', "g2DynF",
 	'author', "Alvareto",
-	'version', 126,
+	'version', 129,
 	'lua_revision', 228184,
 	'code', {
 		"Code/HuskyResearchFundingScript.lua",
+		"Code/HuskyTimeScript.lua",
 	},
-	'saved', 1522057366,
+	'saved', 1522070099,
 })
