@@ -23,12 +23,6 @@ return {
             CreateLabelModifier("HuskyCommander", "AtomicBattery", "max_electricity_charge", 0, 100)
             CreateLabelModifier("HuskyCommander", "WasteRockDumpSite", "max_amount_WasteRock", 0, 100)
         end, 
-        }, {
-        PlaceObj('TechEffect_ModifyLabel', {
-            'Label', "Consts", 
-            'Prop', "bonus_rockets", 
-            'Percent', 100, 
-        }), 
     }), 
     PlaceObj('ModItemDecalEntity', {
         'name', "HuskyLogoDecal", 
@@ -153,10 +147,10 @@ return {
         'RCRover', 1, 
         'ExplorerRover', 1, 
         'RCTransport', 1, 
-        'Drone', 75, 
-        'Polymers', 15, 
-        'MachineParts', 15, 
-        'Electronics', 15, 
+        'Drone', 50, 
+        'Polymers', 30, 
+        'MachineParts', 25, 
+        'Electronics', 30, 
         'DroneHub', 1, 
         'MoistureVaporator', 1, 
         'FuelFactory', 1, 
