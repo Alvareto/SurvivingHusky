@@ -1,46 +1,60 @@
-
 local function GetModLocation()
     -- /Code/HuskyTraitScript.lua = 26
     return debug.getinfo(1, "S").source:sub(2, -26)
 end
 
-function OnMsg.NewHour()
-    for _, workplace in ipairs(UICity.labels.Workplace) do
-        if workplace.auto_performance ~= nil then
-            if workplace.default_auto_performance == nil then
-                workplace.default_auto_performance = workplace.auto_performance
-            end
-            workplace.auto_performance = workplace.default_auto_performance + g_Consts.RSBRoboticsPerformanceBonus
-            workplace.UpdatePerformance()
-        end
+local function IsTechBreakthrough(tech)
+    return tech.field == "Breakthroughs"
+end
+
+local function IsSponsorHusky(sponsor)
+    return sponsor == "Husky"
+end
+
+local function GetFundingPerResearch(sponsor)
+    return sponsor.funding_per_tech
+end
+
+local function GetFundingPerBreakthrough(sponsor)
+    return sponsor.funding_per_breakthrough
+end
+
+--function OnMsg.NewHour()
+
+local function ShowResearchFundingNotification(tech, sponsor)
+    local this_mod_dir = GetModLocation()
+
+    local funding = GetFundingPerResearch(sponsor) -- .funding_per_tech
+    local icon = "funding_research"
+    local name = tech.display_name
+
+    if IsTechBreakthrough(tech) then
+        funding = GetFundingPerBreakthrough(sponsor)-- .funding_per_breakthrough
+        icon = "funding_research_bt"
     end
+
+    AddCustomOnScreenNotification(
+        "ResearchFundingReceived", 
+        T{917893953988, "Funding received"}, 
+        T{917893953989, "$<money>M for discovering <research>"}, 
+        this_mod_dir .. "UI/Icons/Notifications/" .. icon .. ".tga", 
+        false, 
+        {
+            research = name, 
+            money = funding, 
+            expiration = 150000, 
+            priority = "Normal", 
+        } --, 
+    )
+
 end
 
---[[
-function name( param )
--- This effect should happen only with our commander profile
-local commander = GetCommanderProfile()
-if commander.name == "Husky" then
+function OnMsg.TechResearched(tech_id)
+    local sponsor = GetMissionSponsor()
 
-end
-end
+    if IsSponsorHusky(sponsor) then
+        local tech = TechDef[tech_id]
 
-local position = self:GetVisualPos()
-local obj = PlaceAnomaly({
-description = T{"Records show that the previous colony had a research laboratory here. We should analyze the region to see if there's anything worth looking into.<newline><newline>Send an RC Explorer to analyze the Anomaly."},
-capsule_tech = "AutonomousHubs",
-revealed = true
-})
-obj:SetPos(position)
-local position = self:GetVisualPos():xyz()
-local obj = PlaceAnomaly({
-description = T{"Can husky get hubs already?"},
-capsule_tech = "AutonomousHubs",
-revealed = true
-})
-obj:SetPos(x, y, 0)
-DiscoverTech("MicrogravityMedicine")
-DiscoverTech("AutonomousHubs")
-GrantTech("AutonomousHubs")
-
-]]--
+        ShowResearchFundingNotification(tech, sponsor)
+    end
+end -- TechResearched
