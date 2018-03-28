@@ -1,56 +1,61 @@
+-- prop = Time, Date, Duration
+function AddDateTimeDisplay(parent, prop, icon)
+    XImage:new({
+        Id = "idCurrent"..prop.."Icon", 
+        Image = icon, 
+        ImageScale = point(500, 500), 
+    }, parent)
+    local current = XText:new({
+        Id = "idCurrent"..prop.."Display", 
+        MinWidth = 25, 
+        TextColor = RGB(255, 255, 255), 
+        RolloverTextColor = RGB(255, 255, 255), 
+    }, parent)
+    return current
+end
+
+
 function AddCurrentTime()
-    local dlg = GetXDialog("HUD")
-    if dlg['idCurrentTime'] then
+    local interface = GetXDialog("InGameInterface")
+    if interface['idTopRightTimeBar'] then
         -- The current time is already there, so this must have been called more than once
         return
     end
 
-    local left_buttons = dlg['idLeftButtons']
-    local win = XWindow:new({}, left_buttons)
+    --local this_mod_dir = GetModLocation()
 
-    XText:new({
-        Id = "idCurrentTime", 
-        MinWidth = 146, 
-        RolloverTemplate = "Rollover", 
+    local bar = XWindow:new({
+        Id = "idTopRightTimeBar", 
         HAlign = "right", 
-        VAlign = "bottom", 
-        TextFont = "BuildMenuBuilding", 
-        TextColor = RGBA(255, 254, 171, 255), 
-        RolloverTextColor = RGBA(255, 254, 171, 255), 
-        Margins = box(150, 0, 0, 0), 
-        TextHAlign = "center", 
-        TextVAlign = "center"
-    }, win)
-    self.idCurrentTime:SetVisible(true)
+        VAlign = "top", 
+        LayoutMethod = "HList", 
+        Margins = box(0, -1, 0, 0), 
+        Padding = box(8, 0, 8, 0), 
+        Background = RGBA(0, 20, 40, 200), 
+        BorderWidth = 1, 
+    }, interface)
 
-    --[[ XText:new({
-        Id = "idCurrentTime", 
-        MinWidth = 146, 
-        RolloverTemplate = "Rollover", 
-        HAlign = "center", 
-        VAlign = "center", 
-        font_id = 8, --TextFont = "BuildMenuBuilding", 
-        TextColor = RGBA(255, 254, 171, 255), 
-        RolloverTextColor = RGBA(255, 254, 171, 255), 
-        --// top left corner and dimensions
-        Margins = box(41, 0, 0, 0), -- minx, miny, maxx, maxy TESTING TESTING TESTING- finally got it right
-        -- GetXDialog("HUD")['idCurrentTime'].Margins = box(0, 0, 0, -25)
-        TextHAlign = "center", 
-        TextVAlign = "center"
-    }, left_buttons)
-    self.idCurrentTime:SetVisible(true)--]]
-
-    local current_time = dlg['idCurrentTime']
+    if interface['idTimeBar'] then
+        -- The current time is already there, so this must have been called more than once
+        return
+    end
     
-    current_time:SetRolloverTitle(T{
-        T{5778311, "Time"}, 
-        UICity
-    })
-    current_time:SetRolloverText(T{
+    local localtime_section = XWindow:new({
+        Id = "idTimeBar", 
+        LayoutMethod = "HList", 
+        VAlign = "center", 
+        HandleMouse = true, 
+        RolloverTemplate = "Rollover", 
+        Padding = box(0, 0, 5, 0), 
+    }, bar)
+
+    local current_time = AddDateTimeDisplay(localtime_section, "Time", "UI/Icons/res_experimental_research.tga")
+    localtime_section:SetRolloverTitle(T{T{5778311, "Time"}, UICity})
+    localtime_section:SetRolloverText(T{
         T{
             "Current time is <em><time></em>", 
             time = function()
-                return os.date("%H:%M")
+                return tostring(os.date("%H:%M"))
             end
         }, 
         UICity
@@ -60,11 +65,11 @@ function AddCurrentTime()
 end
 
 function UpdateCurrentTime()
-    if not UICity then
-        return
-    end
-    local dlg = GetXDialog("HUD")
-    local current_time = dlg['idCurrentTime']
+    local interface = GetXDialog("InGameInterface") -- ['idTopRightTimeBar']['idTimeBar']['idCurrentTimeDisplay']
+    --local bar = interface['idTopRightTimeBar']
+    --local section = bar['idTimeBar']
+    --local current_time = section['idCurrentTimeDisplay']
+    local current_time = interface['idCurrentTimeDisplay']
 
     -- This shouldn't ever happen, but it can't hurt to check
     if not current_time then
@@ -73,36 +78,35 @@ function UpdateCurrentTime()
 
     current_time:SetText(tostring(os.date("%H:%M")))
 
-    -- init
-    --[[self:CreateThread("update_clock", function()
-        while UICity do
-            local time = os.date("%H:%M")
-            ModLog(tostring(GameTime()) .. " >TIME= " .. tostring(time))
-
-            self.current_time:SetText(tostring(time))
-
-            XUpdateRolloverWindow(current_time)
-
-            Sleep(1000)
-        end
-    end)--]]
+    XUpdateRolloverWindow(section)
 end
 
-function OnMsg.UIReady()
-    AddCurrentTime()
-    UpdateCurrentTime()
-end
+-- local function GetModLocation()
+--     -- /Code/HuskyTimeScript.lua = 25
+--     return debug.getinfo(2, "S").source:sub(2, -25)
+-- end
+
+
 function OnMsg.NewMinute()
     UpdateCurrentTime()
 end
 
-function OnMsg.LoadGame()
-    -- This seems a little ridiculous, but it's the only way I've found to
-    -- trigger when the UI is ready after loading a game
+function OnMsg.UIReady()
     CreateGameTimeThread(function()
         while true do
             WaitMsg("OnRender")
-            if GetXDialog("HUD") then
+            AddCurrentTime()
+            UpdateCurrentTime()
+            break
+        end
+    end)
+end
+
+function OnMsg.LoadGame()
+    CreateGameTimeThread(function()
+        while true do
+            WaitMsg("OnRender")
+            if GetXDialog("InGameInterface") then
                 Msg("UIReady")
                 break
             end
