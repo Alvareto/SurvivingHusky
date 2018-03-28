@@ -71,8 +71,8 @@ function AddCurrentTime()
     end--]]
     local this_mod_dir = GetModLocation()
 
-    local current_time = AddDateTimeSection(bar, "Time", "UI/Icons/res_experimental_research.tga", function() return tostring(os.date("%H:%M")) end)
-    local current_date = AddDateTimeSection(bar, "Date", "UI/Icons/res_experimental_research.tga", function() return tostring(os.date("%x")) end)
+    local current_time = AddDateTimeSection(bar, "Time", this_mod_dir .. "UI/Icons/res_time.tga", function() return tostring(os.date("%H:%M")) end)
+    local current_date = AddDateTimeSection(bar, "Date", this_mod_dir .. "UI/Icons/res_date.tga", function() return tostring(os.date("%x")) end)
     --local current_duration = AddDateTimeSection(bar, "Duration", "UI/Icons/res_experimental_research.tga", function() return MsToClock(os.clock()) end)
 
     return current_time
