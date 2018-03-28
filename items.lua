@@ -23,7 +23,7 @@ return {
             GrantTech("SuperconductingComputing") -- woof woof 
             GrantTech("AutonomousSensors") -- sniff sniff
             GrantTech("DeepScanning") -- dig
-            GrantTech("AtomicAccumulator") -- endless energy
+            GrantTech("AtomicAccumulator") -- energetic
             CreateLabelModifier("HuskyCommander", "FusionReactor", "electricity_production", 0, 50)
             CreateLabelModifier("HuskyCommander", "AtomicBattery", "max_electricity_charge", 0, 100)
             CreateLabelModifier("HuskyCommander", "WasteRockDumpSite", "max_amount_WasteRock", 0, 100)
@@ -85,58 +85,105 @@ return {
         'effect', T{411167707559, --[[ModItemMissionSponsor Husky effect]] "Difficulty: <em>Normal</em><newline><newline>Funding: $<funding> M<newline>Research per Sol: <research(SponsorResearch)><newline>Rare Metals price: $<ExportPricePreciousMetals> M<newline>Starting Applicants: <ApplicantsPoolStartingSize><newline><newline>- 5 extra starting technologies, but no sponsored research <em>(drawback)</em><newline>- Discover more Breakthrough Anomalies<newline>- Gain Funding every time a tech is researched. Gain double if it's a Breakthrough tech<newline>- Researching a Breakthrough Tech grants Applicants and you can buy additional Applicants with funding<newline>- Can only have <em>Husky</em> Colonists <em>(drawback)</em><newline>- Extra Starting Rockets with Large payload (<cargo> kg), but Additional Rockets cannot be bought <em>(drawback)</em>"}, 
         'flavor', T{822144428938, --[[ModItemMissionSponsor Husky flavor]] "Game doesn't allow me to forbid buying rockets, so instead I've made them really expensive to discourage such behaviour."}, 
         'default_skin', "Star", 
-        'game_apply', function (self, city) end, 
-        'goal', "MG_Anomalies", 
-        'sponsor_nation_name1', "Russian", 
-        'sponsor_nation_percent1', 60, 
-        'sponsor_nation_name2', "American", 
-        'sponsor_nation_percent2', 20, 
-        'sponsor_nation_name3', "Japanese", 
-        'sponsor_nation_percent3', 5, 
-        'sponsor_nation_name4', "Chinese", 
-        'sponsor_nation_percent4', 5, 
-        'sponsor_nation_name5', "Swedish", 
-        'sponsor_nation_percent5', 5, 
-        'sponsor_nation_name6', "Brazilian", 
-        'sponsor_nation_percent6', 5, 
-        'RCRover', 1, 
-        'ExplorerRover', 1, 
-        'RCTransport', 1, 
-        'Drone', 50, 
-        'Polymers', 30, 
-        'MachineParts', 25, 
-        'Electronics', 30, 
-        'DroneHub', 1, 
-        'MoistureVaporator', 1, 
-        'FuelFactory', 1, 
-        'StirlingGenerator', 5, 
-        'OrbitalProbe', 10, 
-        }, {
-        PlaceObj('TechEffect_ModifyLabel', {
-            'Label', "Consts", 
-            'Prop', "SponsorResearch", 
-            'Percent', -100, 
-        }), 
+        'game_apply', function (self, city)
+            --CreateLabelModifier("HuskySponsor", "Consts", "SponsorResearch", 0, -100)
+            GrantTech("SuperiorCables") -- protection from husky
+            GrantTech("SuperiorPipes") -- protection from husky
+            GrantTech("ExtractorAI") -- dig
+
+            CreateGameTimeThread(function()
+                Sleep(1) --Wait until applicants generation has completed
+                g_ApplicantPoolFilter.HuskyTrait = nil
+                -- Messing with the UI can't happen right away
+                -- TODO: Find a trigger event instead of this delay?
+                Sleep(1000)
+                --local tech = TechDef[tech_id]
+                params = {
+                    --title = T{"About <display_name>", self.display_name}, 
+                    title = T{"About Husky"}, 
+                    text = T{"This mod enables you to play with all things husky. Try to survive by using some unorthodox methods and never-seen-before play style. <newline><newline><em>HINT:</em> Spend initial sponsor money to invest in outsourcing research."}, 
+                    -- text = T{tech.description, tech}, 
+                    --               text = T{"<description>", description = tech.description},
+                    choice1 = "Lets spend money", 
+                    --choice1_hint1 = "This will take you to the Research Screen", 
+                    --choice1_rollover = "Show Research Screen", 
+                    --choice1_rollover_title = "Research Screen", 
+                    --choice1_img = "UI/Icons/Sections/research_1.tga",
+
+                    choice2 = T{"Woof woof"}, 
+                    --choice2_hint1 = "This will close the current popup dialogue", 
+                    --choice2_rollover_title = "Woof woof", 
+                    --choice2_rollover = "Close Dialogue", 
+                    --choice2_img = "UI/Icons/message_ok.tga",
+
+                    image = "UI/Messages/alleys.tga", 
+                }
+                local choice = WaitPopupNotification(false, params) 
+                
+                -- callback = function(this) OpenResearchDialog() end, 
+                --                ModLog("Event choice BEFORE >>>" .. tostring(choice))
+                --              if choice == 1 then
+                --                OpenResearchDialog()
+            end
+
+
+            --[[CreateRealTimeThread(WaitCustomPopupNotification, 
+                    "About Husky", 
+                    "This mod enables you to play with all things husky. Try to survive by using some unorthodox methods and never-seen-before play style. <newline><newline><em>HINT:</em> Spend initial sponsor money to invest in outsourcing research.", 
+                {"Woof woof"})--]]
+        end)
+    end, 
+    'goal', "MG_Anomalies", 
+    'sponsor_nation_name1', "Russian", 
+    'sponsor_nation_percent1', 60, 
+    'sponsor_nation_name2', "American", 
+    'sponsor_nation_percent2', 20, 
+    'sponsor_nation_name3', "Japanese", 
+    'sponsor_nation_percent3', 5, 
+    'sponsor_nation_name4', "Chinese", 
+    'sponsor_nation_percent4', 5, 
+    'sponsor_nation_name5', "Swedish", 
+    'sponsor_nation_percent5', 5, 
+    'sponsor_nation_name6', "Brazilian", 
+    'sponsor_nation_percent6', 5, 
+    'RCRover', 1, 
+    'ExplorerRover', 1, 
+    'RCTransport', 1, 
+    'Drone', 50, 
+    'Polymers', 30, 
+    'MachineParts', 25, 
+    'Electronics', 30, 
+    'DroneHub', 1, 
+    'MoistureVaporator', 1, 
+    'FuelFactory', 1, 
+    'StirlingGenerator', 5, 
+    'OrbitalProbe', 10, 
+    }, {
+    PlaceObj('TechEffect_ModifyLabel', {
+        'Label', "Consts", 
+        'Prop', "SponsorResearch", 
+        'Percent', -100, 
     }), 
-    PlaceObj('ModItemRadioStation', {
-        'name', "HuskyMusic", 
-        'comment', "igrgurina", 
-        'display_name', T{472768075585, --[[ModItemRadioStation HuskyMusic display_name]] "Woof Woof"}, 
-        'folder', "Music/Husky", 
-        'silence', 1, 
-    }), 
-    PlaceObj('ModItemTrait', {
-        'name', "HuskyTrait", 
-        'comment', "igrgurina", 
-        'display_name', T{694409617122, --[[ModItemTrait HuskyTrait display_name]] "Husky"}, 
-        'category', "other", 
-        'description', T{836563932929, --[[ModItemTrait HuskyTrait description]] "Raises the Morale of all Adult people in the Dome. Benefits stack with each additional Husky."}, 
-        'param', 10, 
-        'apply_func', function (colonist, trait, init) end, 
-        'modify_target', "dome colonists", 
-        'modify_trait', "Adult", 
-        'modify_property', "base_morale", 
-        'modify_amount', 10, 
-        'infopanel_effect_text', T{227855381787, --[[ModItemTrait HuskyTrait infopanel_effect_text]] "Husky wag tail +<amount> times"}, 
-    }), 
+}), 
+PlaceObj('ModItemRadioStation', {
+    'name', "HuskyMusic", 
+    'comment', "igrgurina", 
+    'display_name', T{472768075585, --[[ModItemRadioStation HuskyMusic display_name]] "Woof Woof"}, 
+    'folder', "Music/Husky", 
+    'silence', 1, 
+}), 
+PlaceObj('ModItemTrait', {
+    'name', "HuskyTrait", 
+    'comment', "igrgurina", 
+    'display_name', T{694409617122, --[[ModItemTrait HuskyTrait display_name]] "Husky"}, 
+    'category', "other", 
+    'description', T{836563932929, --[[ModItemTrait HuskyTrait description]] "Raises the Morale of all Adult people in the Dome. Benefits stack with each additional Husky."}, 
+    'param', 10, 
+    'apply_func', function (colonist, trait, init) end, 
+    'modify_target', "dome colonists", 
+    'modify_trait', "Adult", 
+    'modify_property', "base_morale", 
+    'modify_amount', 10, 
+    'infopanel_effect_text', T{227855381787, --[[ModItemTrait HuskyTrait infopanel_effect_text]] "Husky wag tail +<amount> times"}, 
+}), 
 }

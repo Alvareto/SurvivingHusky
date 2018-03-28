@@ -1,7 +1,7 @@
 local function GetModLocation()
     -- /Code/HuskyResearchFundingScript.lua = 26
     --ModLog(tostring(GameTime()) .. " >PATH= " .. tostring(ModElement:GetModRootPath()))
-    return debug.getinfo(1, "S").source:sub(2, -36)
+    return ModElement.GetModRootPath()-- debug.getinfo(1, "S").source:sub(2, -36)
 end
 
 local function IsTechBreakthrough(tech)
@@ -23,7 +23,7 @@ end
 --function OnMsg.NewHour()
 
 local function ShowResearchFundingNotification(name, funding, icon, this_mod_dir)
-    ModLog(tostring(GameTime()) .. " >NAME= " .. tostring(name) .. "=FUNDING=" .. tostring(funding) .. "=ICON=" .. tostring(icon) .. "=DIR=" .. tostring(this_mod_dir))
+    -- ModLog(tostring(GameTime()) .. " >NAME= " .. tostring(name) .. "=FUNDING=" .. tostring(funding) .. "=ICON=" .. tostring(icon) .. "=DIR=" .. tostring(this_mod_dir))
 
     AddCustomOnScreenNotification("ResearchFundingReceived", T{917893953988, "Funding received"}, T{917893953989, "$<money>M for discovering <research>"}, this_mod_dir .. "UI/Icons/Notifications/" .. icon .. ".tga", false, {research = name, money = funding, expiration = 150000, priority = "Normal"})
 end
